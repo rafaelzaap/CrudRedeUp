@@ -28,8 +28,7 @@ public class MembroRepository : IMembroRepository
                 primeiro_nome AS PrimeiroNome,
                 ativo AS Ativo
             FROM menbros
-            WHERE codigo in (37,33)
-            and (@IncluirInativos = TRUE OR ativo = 1)
+            WHERE (@IncluirInativos = TRUE OR ativo = 1)
               AND (
                     @Busca IS NULL
                     OR nome LIKE CONCAT('%', @Busca, '%')
