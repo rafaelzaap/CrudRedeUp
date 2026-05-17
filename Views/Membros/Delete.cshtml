@@ -1,0 +1,21 @@
+@model Membro
+
+@{
+    ViewData["Title"] = "Inativar membro";
+}
+
+<div class="mb-4">
+    <h1 class="h3 mb-1">Inativar membro</h1>
+    <p class="text-muted mb-0">Confirme a alteracao do status.</p>
+</div>
+
+<div class="alert alert-warning" role="alert">
+    Voce esta prestes a inativar o cadastro de <strong>@Model.Nome</strong>. O registro sera mantido no banco.
+</div>
+
+<form asp-action="Delete" asp-route-id="@Model.Codigo" method="post">
+    <div class="d-flex gap-2">
+        <button type="submit" class="btn btn-danger">Inativar</button>
+        <a class="btn btn-outline-secondary" asp-action="Details" asp-route-id="@Model.Codigo">Cancelar</a>
+    </div>
+</form>

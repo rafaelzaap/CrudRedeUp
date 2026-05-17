@@ -1,0 +1,219 @@
+html {
+  font-size: 14px;
+}
+
+:root {
+  --app-bg: #f7f9fc;
+  --app-surface: #ffffff;
+  --app-surface-soft: #f1f4f8;
+  --app-border: #d8dee8;
+  --app-text: #111827;
+  --app-muted: #5f6b7a;
+  --app-nav-bg: #ffffff;
+  --app-nav-link: #1f2937;
+  --app-accent: #16a34a;
+  --app-focus: #38bdf8;
+}
+
+:root[data-theme="dark"] {
+  color-scheme: dark;
+  --app-bg: #0d1117;
+  --app-surface: #151b23;
+  --app-surface-soft: #0f1720;
+  --app-border: #303946;
+  --app-text: #e6edf3;
+  --app-muted: #9aa7b4;
+  --app-nav-bg: #111820;
+  --app-nav-link: #dce6ef;
+  --app-accent: #22c55e;
+  --app-focus: #38bdf8;
+}
+
+@media (min-width: 768px) {
+  html {
+    font-size: 16px;
+  }
+}
+
+.btn:focus, .btn:active:focus, .btn-link.nav-link:focus, .form-control:focus, .form-check-input:focus {
+  box-shadow: 0 0 0 0.1rem white, 0 0 0 0.25rem #258cfb;
+}
+
+html {
+  position: relative;
+  min-height: 100%;
+}
+
+body {
+  margin-bottom: 60px;
+  background: var(--app-bg);
+  color: var(--app-text);
+  transition: background-color 160ms ease, color 160ms ease;
+}
+
+a {
+  color: #2563eb;
+}
+
+:root[data-theme="dark"] a {
+  color: #7dd3fc;
+}
+
+.navbar {
+  background: var(--app-nav-bg);
+}
+
+.navbar-brand,
+.navbar .nav-link {
+  color: var(--app-nav-link);
+}
+
+.navbar-brand:hover,
+.navbar .nav-link:hover,
+.navbar .nav-link:focus {
+  color: var(--app-accent);
+}
+
+.navbar-toggler {
+  border-color: var(--app-border);
+}
+
+:root[data-theme="dark"] .navbar-toggler-icon {
+  filter: invert(1) grayscale(1);
+}
+
+.border-bottom,
+.border-top,
+.border,
+.table,
+.form-control,
+.form-check-input {
+  border-color: var(--app-border) !important;
+}
+
+.text-muted {
+  color: var(--app-muted) !important;
+}
+
+.table {
+  color: var(--app-text);
+}
+
+.table > :not(caption) > * > * {
+  background-color: transparent;
+  color: var(--app-text);
+  border-bottom-color: var(--app-border);
+}
+
+.table-striped > tbody > tr:nth-of-type(odd) > * {
+  --bs-table-accent-bg: var(--app-surface-soft);
+  color: var(--app-text);
+}
+
+.table-hover > tbody > tr:hover > * {
+  --bs-table-accent-bg: rgba(34, 197, 94, 0.10);
+  color: var(--app-text);
+}
+
+.form-control {
+  background: var(--app-surface);
+  color: var(--app-text);
+}
+
+.form-control:focus {
+  background: var(--app-surface);
+  color: var(--app-text);
+  border-color: var(--app-focus) !important;
+}
+
+.form-control::placeholder {
+  color: var(--app-muted);
+}
+
+.form-check-input {
+  background-color: var(--app-surface);
+}
+
+.bg-light {
+  background-color: var(--app-surface-soft) !important;
+  color: var(--app-text);
+}
+
+.alert-success {
+  background-color: rgba(34, 197, 94, 0.16);
+  border-color: rgba(34, 197, 94, 0.38);
+  color: var(--app-text);
+}
+
+.alert-danger {
+  background-color: rgba(239, 68, 68, 0.16);
+  border-color: rgba(239, 68, 68, 0.38);
+  color: var(--app-text);
+}
+
+.alert-warning {
+  background-color: rgba(245, 158, 11, 0.16);
+  border-color: rgba(245, 158, 11, 0.38);
+  color: var(--app-text);
+}
+
+.footer {
+  background: var(--app-bg);
+}
+
+.theme-toggle {
+  align-items: center;
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 999px;
+  color: var(--app-nav-link);
+  display: inline-flex;
+  height: 38px;
+  justify-content: center;
+  margin-left: 0.75rem;
+  width: 38px;
+}
+
+.theme-toggle:hover,
+.theme-toggle:focus {
+  border-color: var(--app-accent);
+  color: var(--app-accent);
+  outline: none;
+}
+
+.theme-icon {
+  fill: none;
+  height: 19px;
+  stroke: currentColor;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  stroke-width: 2;
+  width: 19px;
+}
+
+.theme-icon-sun {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-moon {
+  display: none;
+}
+
+:root[data-theme="dark"] .theme-icon-sun {
+  display: block;
+}
+
+@media (max-width: 575.98px) {
+  .theme-toggle {
+    margin: 0.5rem 0 0;
+  }
+}
+
+.form-floating > .form-control-plaintext::placeholder, .form-floating > .form-control::placeholder {
+  color: var(--bs-secondary-color);
+  text-align: end;
+}
+
+.form-floating > .form-control-plaintext:focus::placeholder, .form-floating > .form-control:focus::placeholder {
+  text-align: start;
+}

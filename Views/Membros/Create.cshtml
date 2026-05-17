@@ -1,0 +1,23 @@
+@model Membro
+
+@{
+    ViewData["Title"] = "Novo membro";
+}
+
+<div class="mb-4">
+    <h1 class="h3 mb-1">Novo membro</h1>
+    <p class="text-muted mb-0">Preencha os dados principais do cadastro.</p>
+</div>
+
+<form asp-action="Create" method="post">
+    @await Html.PartialAsync("_Form", Model)
+
+    <div class="d-flex gap-2 mt-4">
+        <button type="submit" class="btn btn-primary">Salvar</button>
+        <a class="btn btn-outline-secondary" asp-action="Index">Cancelar</a>
+    </div>
+</form>
+
+@section Scripts {
+    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+}

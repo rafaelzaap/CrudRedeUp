@@ -1,0 +1,40 @@
+@model Membro
+
+<div asp-validation-summary="ModelOnly" class="text-danger mb-3"></div>
+
+<input type="hidden" asp-for="Codigo" />
+
+<div class="row g-3">
+    <div class="col-md-12">
+        <label asp-for="Nome" class="form-label"></label>
+        <input asp-for="Nome" class="form-control" autocomplete="name" />
+        <span asp-validation-for="Nome" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="DataDeNascimento" class="form-label"></label>
+        <input asp-for="DataDeNascimento" class="form-control" type="date" />
+        <span asp-validation-for="DataDeNascimento" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Telefone" class="form-label"></label>
+        <input asp-for="Telefone" class="form-control" inputmode="tel" />
+        <span asp-validation-for="Telefone" class="text-danger"></span>
+    </div>
+
+    <div class="col-md-4">
+        <label asp-for="Ativo" class="form-label"></label>
+        <select asp-for="Ativo" class="form-select">
+            <option value="1">Ativo</option>
+            <option value="0">Inativo</option>
+        </select>
+        <span asp-validation-for="Ativo" class="text-danger"></span>
+    </div>
+
+    <div class="col-12">
+        <label asp-for="Observacao" class="form-label"></label>
+        <textarea asp-for="Observacao" class="form-control" rows="4"></textarea>
+        <span asp-validation-for="Observacao" class="text-danger"></span>
+    </div>
+</div>
