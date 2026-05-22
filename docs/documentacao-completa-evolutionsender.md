@@ -85,15 +85,15 @@ Essa string e usada pelos repositorios:
 Tabela usada:
 
 ```text
-menbros
+membros
 ```
 
-Observacao importante: o nome da tabela no banco esta como `menbros`, com `n`.
+Observacao importante: o nome correto da tabela no banco e `membros`, com `m`.
 
 Campos usados:
 
 ```sql
-CREATE TABLE menbros (
+CREATE TABLE membros (
     codigo INT NOT NULL AUTO_INCREMENT,
     nome VARCHAR(150) NOT NULL,
     data_de_nascimento DATE NOT NULL,
@@ -170,7 +170,7 @@ Task<bool> ExcluirAsync(int codigo);
 O metodo `ListarAsync` busca membros ativos por padrao:
 
 ```sql
-FROM menbros
+FROM membros
 WHERE (@IncluirInativos = TRUE OR ativo = 1)
 ```
 
@@ -410,7 +410,7 @@ SELECT
   m.mensagem_id,
   m.titulo,
   m.texto_base
-FROM menbros c
+FROM membros c
 CROSS JOIN (
   SELECT
     id AS mensagem_id,
@@ -1295,4 +1295,3 @@ No estado atual, o projeto permite:
 - diferenciar visualmente mensagem ativa e inativa.
 
 Este documento substitui, como referencia principal, os documentos separados anteriores.
-

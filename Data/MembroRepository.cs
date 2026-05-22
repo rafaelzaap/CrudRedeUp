@@ -27,8 +27,9 @@ public class MembroRepository : IMembroRepository
                 observacao AS Observacao,
                 primeiro_nome AS PrimeiroNome,
                 ativo AS Ativo
-            FROM menbros
-            WHERE (@IncluirInativos = TRUE OR ativo = 1)
+            FROM membros
+            WHERE CODIGO = 37
+              AND (@IncluirInativos = TRUE OR ativo = 1)
               AND (
                     @Busca IS NULL
                     OR nome LIKE CONCAT('%', @Busca, '%')
@@ -60,11 +61,37 @@ public class MembroRepository : IMembroRepository
                 observacao AS Observacao,
                 primeiro_nome AS PrimeiroNome,
                 ativo AS Ativo
-            FROM menbros
+            FROM membros
             WHERE codigo = @Codigo;
             """;
 
         return await connection.QuerySingleOrDefaultAsync<Membro>(sql, new { Codigo = codigo });
+    }
+
+    public async Task<IReadOnlyList<Membro>> ListarAniversariantesAsync(bool incluirInativos = false)
+    {
+        await using var connection = new MySqlConnection(_connectionString);
+
+        const string sql = """
+            SELECT
+                codigo AS Codigo,
+                nome AS Nome,
+                data_de_nascimento AS DataDeNascimento,
+                telefone AS Telefone,
+                observacao AS Observacao,
+                primeiro_nome AS PrimeiroNome,
+                ativo AS Ativo
+            FROM membros
+            WHERE (@IncluirInativos = TRUE OR ativo = 1)
+            ORDER BY MONTH(data_de_nascimento), DAY(data_de_nascimento), nome;
+            """;
+
+        var membros = await connection.QueryAsync<Membro>(sql, new
+        {
+            IncluirInativos = incluirInativos
+        });
+
+        return membros.ToList();
     }
 
     public async Task<int> CriarAsync(Membro membro)
@@ -72,7 +99,7 @@ public class MembroRepository : IMembroRepository
         await using var connection = new MySqlConnection(_connectionString);
 
         const string sql = """
-            INSERT INTO menbros
+            INSERT INTO membros
                 (nome, data_de_nascimento, telefone, observacao, ativo)
             VALUES
                 (@Nome, @DataDeNascimento, @Telefone, @Observacao, @Ativo);
@@ -88,7 +115,7 @@ public class MembroRepository : IMembroRepository
         await using var connection = new MySqlConnection(_connectionString);
 
         const string sql = """
-            UPDATE menbros
+            UPDATE membros
             SET
                 nome = @Nome,
                 data_de_nascimento = @DataDeNascimento,
@@ -106,7 +133,7 @@ public class MembroRepository : IMembroRepository
     {
         await using var connection = new MySqlConnection(_connectionString);
 
-        const string sql = "UPDATE menbros SET ativo = 0 WHERE codigo = @Codigo;";
+        const string sql = "UPDATE membros SET ativo = 0 WHERE codigo = @Codigo;";
         var linhas = await connection.ExecuteAsync(sql, new { Codigo = codigo });
         return linhas > 0;
     }

@@ -4,12 +4,21 @@
     <TargetFramework>net9.0</TargetFramework>
     <Nullable>enable</Nullable>
     <ImplicitUsings>enable</ImplicitUsings>
+    <UserSecretsId>evolutionsender-local-secrets</UserSecretsId>
+    <DefaultItemExcludes>$(DefaultItemExcludes);obj\**;.dotnet-build-obj\**;.dotnet-build-bin\**</DefaultItemExcludes>
   </PropertyGroup>
 
   <ItemGroup>
     <PackageReference Include="Dapper" Version="2.1.72" />
     <PackageReference Include="MySqlConnector" Version="2.5.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Compile Remove=".dotnet-build-obj\**" />
+    <Content Remove=".dotnet-build-obj\**" />
+    <EmbeddedResource Remove=".dotnet-build-obj\**" />
+    <None Remove=".dotnet-build-obj\**" />
   </ItemGroup>
 
   <ItemGroup>

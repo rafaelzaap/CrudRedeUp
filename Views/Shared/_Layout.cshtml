@@ -1,4 +1,8 @@
 ﻿<!DOCTYPE html>
+@inject EvolutionSender.Services.ISistemaStatusService SistemaStatusService
+@{
+    var sistemaStatus = await SistemaStatusService.VerificarAsync();
+}
 <html lang="en">
 <head>
     <meta charset="utf-8" />
@@ -36,9 +40,19 @@
                             <a class="nav-link" asp-area="" asp-controller="Mensagens" asp-action="Index">Mensagens</a>
                         </li>
                         <li class="nav-item">
+                            <a class="nav-link" asp-area="" asp-controller="Aniversariantes" asp-action="Index">Aniversariantes</a>
+                        </li>
+                        <li class="nav-item">
                             <a class="nav-link" asp-area="" asp-controller="Home" asp-action="Privacy">Privacy</a>
                         </li>
                     </ul>
+                    <div class="d-flex align-items-center gap-2">
+                        <span class="small text-muted">@User.Identity?.Name</span>
+                        <form asp-controller="Conta" asp-action="Logout" method="post" class="m-0">
+                            @Html.AntiForgeryToken()
+                            <button class="btn btn-outline-secondary btn-sm" type="submit">Sair</button>
+                        </form>
+                    </div>
                     <button class="theme-toggle" type="button" aria-label="Alternar tema" title="Alternar tema" data-theme-toggle>
                         <svg class="theme-icon theme-icon-moon" viewBox="0 0 24 24" aria-hidden="true">
                             <path d="M21 14.7A8.3 8.3 0 0 1 9.3 3a7 7 0 1 0 11.7 11.7Z" />
@@ -54,6 +68,20 @@
     </header>
     <div class="container">
         <main role="main" class="pb-3">
+            @if (!sistemaStatus.TudoOnline)
+            {
+                <div class="alert alert-warning border-0 shadow-sm" role="alert">
+                    <div class="fw-semibold mb-1">Atenção: serviço indisponível</div>
+                    @if (!sistemaStatus.BancoOnline)
+                    {
+                        <div>@sistemaStatus.ErroBanco</div>
+                    }
+                    @if (!sistemaStatus.EvolutionOnline)
+                    {
+                        <div>@sistemaStatus.ErroEvolution</div>
+                    }
+                </div>
+            }
             @RenderBody()
         </main>
     </div>

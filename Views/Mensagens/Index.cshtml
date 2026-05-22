@@ -4,6 +4,9 @@
     ViewData["Title"] = "Mensagens";
     var busca = ViewData["Busca"] as string;
     var incluirInativas = (bool)(ViewData["IncluirInativas"] ?? false);
+    var envios = ViewData["Envios"] as IReadOnlyList<EnvioMensagemJob> ?? Array.Empty<EnvioMensagemJob>();
+    var historico = ViewData["Historico"] as IReadOnlyList<EnvioMensagemHistorico> ?? Array.Empty<EnvioMensagemHistorico>();
+    var atualizarAutomaticamente = envios.Any(e => e.Status is "Pendente" or "Processando");
 }
 
 <div class="d-flex flex-wrap align-items-center justify-content-between gap-3 mb-4">
@@ -37,6 +40,103 @@
 @if (TempData["DetalhesErro"] is string detalhesErro)
 {
     <div class="alert alert-warning" role="alert" style="white-space: pre-wrap;">@detalhesErro</div>
+}
+
+@if (envios.Count > 0)
+{
+    <div class="mb-4">
+        <h2 class="h5 mb-2">Envios em andamento</h2>
+        <div class="table-responsive">
+            <table class="table table-sm align-middle">
+                <thead>
+                    <tr>
+                        <th>Envio</th>
+                        <th>Status</th>
+                        <th>Inicio</th>
+                        <th>Progresso</th>
+                        <th>Resultado</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var envio in envios)
+                {
+                    <tr>
+                        <td>@envio.Descricao</td>
+                        <td>@envio.Status</td>
+                        <td>@envio.IniciadoEm?.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td style="min-width: 260px;">
+                            <div class="progress envio-progress" role="progressbar" aria-valuenow="@envio.Percentual" aria-valuemin="0" aria-valuemax="100">
+                                <div class="progress-bar" style="width: @envio.Percentual%;">@envio.Percentual%</div>
+                            </div>
+                            <div class="small text-muted mt-1">
+                                @if (envio.TotalItens > 0)
+                                {
+                                    <span>@envio.ItensProcessados/@envio.TotalItens</span>
+                                }
+                                @if (!string.IsNullOrWhiteSpace(envio.ItemAtual))
+                                {
+                                    <span> - @envio.ItemAtual</span>
+                                }
+                            </div>
+                        </td>
+                        <td>
+                            @if (envio.Resultado is not null)
+                            {
+                                <span>@envio.Resultado.TotalEnviados envio(s), @envio.Resultado.TotalErros erro(s)</span>
+                            }
+                            else if (!string.IsNullOrWhiteSpace(envio.Erro))
+                            {
+                                <span class="text-danger">@envio.Erro</span>
+                            }
+                            else
+                            {
+                                <span>-</span>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
+}
+
+@if (historico.Count > 0)
+{
+    <div class="mb-4">
+        <h2 class="h5 mb-2">Historico recente</h2>
+        <div class="table-responsive historico-scroll">
+            <table class="table table-sm align-middle">
+                <thead>
+                    <tr>
+                        <th>Data</th>
+                        <th>Mensagem</th>
+                        <th>Membro</th>
+                        <th>Telefone</th>
+                        <th>Status</th>
+                    </tr>
+                </thead>
+                <tbody>
+                @foreach (var item in historico)
+                {
+                    <tr>
+                        <td>@item.CriadoEm.ToString("dd/MM/yyyy HH:mm:ss")</td>
+                        <td>@item.MensagemId</td>
+                        <td>@item.MembroNome</td>
+                        <td>@item.TelefoneNormalizado</td>
+                        <td>
+                            <span>@item.Status</span>
+                            @if (!string.IsNullOrWhiteSpace(item.Erro))
+                            {
+                                <div class="small text-danger">@item.Erro</div>
+                            }
+                        </td>
+                    </tr>
+                }
+                </tbody>
+            </table>
+        </div>
+    </div>
 }
 
 <form method="get" class="row g-2 align-items-end mb-3">
@@ -111,3 +211,10 @@
         </tbody>
     </table>
 </div>
+
+@if (atualizarAutomaticamente)
+{
+    <script>
+        window.setTimeout(() => window.location.reload(), 3000);
+    </script>
+}

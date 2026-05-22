@@ -51,6 +51,41 @@ body {
   transition: background-color 160ms ease, color 160ms ease;
 }
 
+.auth-body {
+  align-items: center;
+  background:
+    linear-gradient(135deg, rgba(22, 163, 74, 0.18), transparent 38%),
+    linear-gradient(315deg, rgba(37, 99, 235, 0.16), transparent 42%),
+    var(--app-bg);
+  display: flex;
+  margin: 0;
+  min-height: 100vh;
+}
+
+.auth-shell {
+  margin: 0 auto;
+  padding: 24px;
+  width: min(100%, 460px);
+}
+
+.auth-panel {
+  background: var(--app-surface);
+  border: 1px solid var(--app-border);
+  border-radius: 8px;
+  box-shadow: 0 20px 50px rgba(0, 0, 0, 0.18);
+  padding: 28px;
+}
+
+.auth-panel h1 {
+  font-size: 1.7rem;
+  margin-bottom: 0.35rem;
+}
+
+.auth-panel p {
+  color: var(--app-muted);
+  margin-bottom: 1.5rem;
+}
+
 a {
   color: #2563eb;
 }
@@ -155,6 +190,32 @@ a {
   background-color: rgba(245, 158, 11, 0.16);
   border-color: rgba(245, 158, 11, 0.38);
   color: var(--app-text);
+}
+
+.envio-progress {
+  background: var(--app-surface-soft);
+  border: 1px solid var(--app-border);
+  height: 22px;
+}
+
+.envio-progress .progress-bar {
+  background-color: var(--app-accent);
+  color: #ffffff;
+  font-size: 0.78rem;
+  font-weight: 600;
+  min-width: 34px;
+}
+
+.historico-scroll {
+  max-height: 190px;
+  overflow-y: auto;
+}
+
+.historico-scroll thead th {
+  background: var(--app-bg);
+  position: sticky;
+  top: 0;
+  z-index: 1;
 }
 
 .footer {

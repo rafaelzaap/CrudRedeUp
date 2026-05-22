@@ -25,7 +25,7 @@ if (-not (Test-AppOnline)) {
         "-NoExit",
         "-ExecutionPolicy", "Bypass",
         "-Command",
-        "cd `"$projectDir`"; `$env:DOTNET_CLI_HOME=`"$dotnetHome`"; `$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE='1'; dotnet run --urls http://localhost:5238"
+        "cd `"$projectDir`"; `$env:DOTNET_CLI_HOME=`"$dotnetHome`"; `$env:DOTNET_SKIP_FIRST_TIME_EXPERIENCE='1'; `$env:ASPNETCORE_ENVIRONMENT='Development'; dotnet run --urls http://localhost:5238"
     )
 
     Start-Process -FilePath "powershell" -ArgumentList $arguments -WindowStyle Minimized

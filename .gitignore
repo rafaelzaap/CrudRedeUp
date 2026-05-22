@@ -2,4 +2,12 @@ bin/
 obj/
 .vs/
 .dotnet-home/
+.dotnet-appdata/
+.dotnet-publish-appdata/
+.dotnet-build-obj/
+.dotnet-build-bin/
+.dotnet-publish-obj/
+EvolutionSender-App/
+publish-local/
+appsettings.Local.json
 *.user

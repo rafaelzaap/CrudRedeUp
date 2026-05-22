@@ -8,20 +8,25 @@ namespace EvolutionSender.Controllers;
 public class MensagensController : Controller
 {
     private readonly IMensagemRepository _mensagemRepository;
-    private readonly IEnvioMensagemService _envioMensagemService;
+    private readonly IEnvioMensagemHistoricoRepository _historicoRepository;
+    private readonly IEnvioMensagemJobService _envioMensagemJobService;
 
     public MensagensController(
         IMensagemRepository mensagemRepository,
-        IEnvioMensagemService envioMensagemService)
+        IEnvioMensagemHistoricoRepository historicoRepository,
+        IEnvioMensagemJobService envioMensagemJobService)
     {
         _mensagemRepository = mensagemRepository;
-        _envioMensagemService = envioMensagemService;
+        _historicoRepository = historicoRepository;
+        _envioMensagemJobService = envioMensagemJobService;
     }
 
-    public async Task<IActionResult> Index(string? busca, bool incluirInativas = false)
+    public async Task<IActionResult> Index(string? busca, bool incluirInativas = false, CancellationToken cancellationToken = default)
     {
         ViewData["Busca"] = busca;
         ViewData["IncluirInativas"] = incluirInativas;
+        ViewData["Envios"] = _envioMensagemJobService.ListarRecentes();
+        ViewData["Historico"] = await _historicoRepository.ListarRecentesAsync(10, cancellationToken: cancellationToken);
 
         var mensagens = await _mensagemRepository.ListarAsync(busca, incluirInativas);
         return View(mensagens);
@@ -35,6 +40,9 @@ public class MensagensController : Controller
         {
             return NotFound();
         }
+
+        ViewData["Envios"] = _envioMensagemJobService.ListarRecentes(mensagemId: id);
+        ViewData["Historico"] = await _historicoRepository.ListarRecentesAsync(10, id);
 
         return View(mensagem);
     }
@@ -128,26 +136,12 @@ public class MensagensController : Controller
 
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> EnviarAtiva(int? id, CancellationToken cancellationToken)
+    public IActionResult EnviarAtiva(int? id)
     {
-        var resultado = id.HasValue
-            ? await _envioMensagemService.EnviarMensagemAtivaAsync(id.Value, cancellationToken)
-            : await _envioMensagemService.EnviarTodasMensagensAtivasAsync(cancellationToken);
-
-        if (resultado.TotalEnviados > 0)
-        {
-            TempData["Mensagem"] =
-                $"Envio finalizado: {resultado.TotalMensagensInativadas}/{resultado.TotalMensagens} mensagem(ns) processada(s), {resultado.TotalEnviados} envio(s), {resultado.TotalErros} erro(s).";
-        }
-        else
-        {
-            TempData["Erro"] = resultado.Erros.FirstOrDefault() ?? "Nenhuma mensagem foi enviada.";
-        }
-
-        if (resultado.Erros.Count > 0)
-        {
-            TempData["DetalhesErro"] = string.Join(Environment.NewLine, resultado.Erros.Take(10));
-        }
+        _ = _envioMensagemJobService.Enfileirar(id);
+        TempData["Mensagem"] = id.HasValue
+            ? $"Envio da mensagem {id.Value} iniciado em segundo plano."
+            : "Envio das mensagens ativas iniciado em segundo plano.";
 
         if (id.HasValue)
         {

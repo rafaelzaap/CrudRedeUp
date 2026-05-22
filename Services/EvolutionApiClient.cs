@@ -27,7 +27,7 @@ public class EvolutionApiClient : IEvolutionApiClient
             return new EvolutionApiSendResult
             {
                 Sucesso = false,
-                Erro = "Configure BaseUrl, InstanceName e ApiKey da Evolution API no appsettings."
+                Erro = "Configure BaseUrl, InstanceName e ApiKey da Evolution API. Use appsettings.Local.json, user-secrets ou variaveis de ambiente."
             };
         }
 
