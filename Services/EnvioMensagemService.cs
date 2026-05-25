@@ -302,12 +302,45 @@ public partial class EnvioMensagemService : IEnvioMensagemService
         }
     }
 
-    private static string MontarTexto(Mensagem mensagem, Membro membro)
+    private string MontarTexto(Mensagem mensagem, Membro membro)
     {
-        return mensagem.Texto
+        var texto = AplicarPlaceholders(mensagem.Texto, membro).TrimStart();
+
+        if (!_options.AdicionarSaudacao || texto.StartsWith("Oi,", StringComparison.OrdinalIgnoreCase))
+        {
+            return texto;
+        }
+
+        var saudacao = AplicarPlaceholders(_options.SaudacaoTemplate, membro).Trim();
+
+        if (string.IsNullOrWhiteSpace(saudacao))
+        {
+            return texto;
+        }
+
+        return $"{saudacao} {texto}";
+    }
+
+    private static string AplicarPlaceholders(string texto, Membro membro)
+    {
+        var primeiroNome = string.IsNullOrWhiteSpace(membro.PrimeiroNome)
+            ? ObterPrimeiroNome(membro.Nome)
+            : membro.PrimeiroNome;
+
+        return texto
             .Replace("{nome}", membro.Nome)
-            .Replace("{primeiro_nome}", membro.PrimeiroNome)
+            .Replace("{primeiro_nome}", primeiroNome)
             .Replace("{telefone}", membro.Telefone ?? string.Empty);
+    }
+
+    private static string ObterPrimeiroNome(string nome)
+    {
+        if (string.IsNullOrWhiteSpace(nome))
+        {
+            return string.Empty;
+        }
+
+        return nome.Trim().Split(' ', StringSplitOptions.RemoveEmptyEntries).FirstOrDefault() ?? nome.Trim();
     }
 
     private static string? NormalizarTelefone(string? telefone)
